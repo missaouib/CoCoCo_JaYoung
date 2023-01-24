@@ -1,7 +1,6 @@
 package com.kos.CoCoCo.ja0.controller;
 
 import java.io.IOException;
-import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -10,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kos.CoCoCo.ja0.awsS3.AwsS3;
@@ -22,7 +19,6 @@ import com.kos.CoCoCo.ja0.repository.BoardCategoryRepositoryH;
 import com.kos.CoCoCo.ja0.repository.BoardRepositoryH;
 import com.kos.CoCoCo.ja0.repository.ReplyRepositoryH;
 import com.kos.CoCoCo.ja0.repository.TeamRepository;
-import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 import com.kos.CoCoCo.vo.BoardVO;
 import com.kos.CoCoCo.vo.UserVO;
@@ -72,30 +68,25 @@ public class BoardController {
 	public String addCategory(@PathVariable String categoryName, HttpSession session) {
 		Long teamId = (Long) session.getAttribute("teamId");
 		
-		Long cId =  new Random().nextLong();
-		if(cId <0) cId *= -1;
-		Long categoryId = Long.valueOf(String.valueOf(cId).substring(0, 6));
-		
-		BoardCategoryMultikey bcId = new BoardCategoryMultikey(categoryId, tRepo.findById(teamId).get());
-		BoardCategoryVO category = new BoardCategoryVO(bcId, categoryName);
-		bcRepo.save(category);
+		BoardCategoryVO category = BoardCategoryVO.builder().categoryName(categoryName).team(tRepo.findById(teamId).get()).build();
+		BoardCategoryVO newCaregory = bcRepo.save(category);
 		
 		session.setAttribute("categoryList", bcRepo.findByTeamId(teamId));
 		
-		return "redirect:/board?categoryId="+categoryId;
+		return "redirect:/board?categoryId="+newCaregory.getBoardCategoryId();
 	}
 	
 	@GetMapping("/modifyCategory")
 	public String modifyCategory(BoardCategoryVO category, HttpSession session) {
 		Long teamId = (Long) session.getAttribute("teamId");
 		
-		BoardCategoryVO boardCategory = bcRepo.findByCategoryId(category.getBoardCategoryId().getCategoryId());
+		BoardCategoryVO boardCategory = bcRepo.findByCategoryId(category.getBoardCategoryId());
 		boardCategory.setCategoryName(category.getCategoryName());
 		bcRepo.save(boardCategory);
 		
 		session.setAttribute("categoryList", bcRepo.findByTeamId(teamId));
 		
-		return "redirect:/board?categoryId=" + category.getBoardCategoryId().getCategoryId();
+		return "redirect:/board?categoryId=" + category.getBoardCategoryId();
 	}
 	
 	@Transactional

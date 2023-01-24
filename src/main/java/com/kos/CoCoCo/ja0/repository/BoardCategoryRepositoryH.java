@@ -6,11 +6,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.kos.CoCoCo.vo.BoardCategoryMultikey;
 import com.kos.CoCoCo.vo.BoardCategoryVO;
 
 
-public interface BoardCategoryRepositoryH extends CrudRepository<BoardCategoryVO, BoardCategoryMultikey>{
+public interface BoardCategoryRepositoryH extends CrudRepository<BoardCategoryVO, Long>{
 	
 	@Query(value = "select * from board_category where team_team_id = ?1", nativeQuery = true)
 	List<BoardCategoryVO> findByTeamId(Long teamId);
