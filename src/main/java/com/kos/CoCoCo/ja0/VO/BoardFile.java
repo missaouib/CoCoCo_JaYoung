@@ -15,12 +15,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-//@ToString(exclude = "board")
-//@AllArgsConstructor
-//@Builder
-//@Data
-//@Entity
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = "board")
+@AllArgsConstructor
+@Builder
+@Data
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardFile {
 
 	@Id

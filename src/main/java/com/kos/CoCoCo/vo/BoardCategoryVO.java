@@ -1,7 +1,10 @@
 package com.kos.CoCoCo.vo;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -17,9 +20,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "boardCategory")
 public class BoardCategoryVO {
 
-	@EmbeddedId
-	BoardCategoryMultikey boardCategoryId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long boardCategoryId;
 	
 	private String categoryName;
+	
+	@ManyToOne
+	TeamVO team;
 
 }
